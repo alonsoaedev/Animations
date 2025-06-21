@@ -12,15 +12,27 @@ struct ContentView: View {
     
     var body: some View {
         Button("Tap me") {
-            animationScale += 1
+//            animationScale += 1
         }
         .padding(50)
         .background(.red)
         .foregroundStyle(.white)
         .clipShape(.circle)
-        .scaleEffect(animationScale)
-        .blur(radius: (animationScale - 1) * 3)
-        .animation(.default, value: animationScale)
+        .overlay(
+            Circle()
+                .stroke(.red)
+                .scaleEffect(animationScale)
+                .opacity(2 - animationScale)
+                .animation(
+                    .easeOut(duration: 1)
+                        // modifier of the Animation Struct
+                        .repeatForever(autoreverses: false),
+                    value: animationScale
+                )
+        )
+        .onAppear {
+            animationScale = 2
+        }
     }
 }
 
