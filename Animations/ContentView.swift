@@ -8,20 +8,28 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var enabled = false
-    
+    @State private var dragAmount = CGSize.zero
     var body: some View {
-        Button("Tap me") {
-            withAnimation(.spring(duration: 1, bounce: 0.5)) {
-                enabled.toggle()
-            }
-        }
-        .frame(width: 200, height: 200)
-        .background(enabled ? .blue : .red)
-        .foregroundStyle(.white)
-        .animation(nil, value: enabled) // this will animate all the above modifiers
-        .clipShape(.rect(cornerRadius: enabled ? 60 : 0))
-        .animation(.spring(duration: 1, bounce: 0.9), value: enabled) // this will animate until the last animation
+        LinearGradient(
+            colors: [.yellow, .red],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        .frame(width: 300, height: 200)
+        .clipShape(.rect(cornerRadius: 10))
+        .offset(dragAmount)
+        .gesture(
+            DragGesture()
+                .onChanged { value in
+                    self.dragAmount = value.translation
+                }
+                .onEnded { _ in
+                    withAnimation(.bouncy) {
+                        self.dragAmount = .zero
+                    }
+                }
+        )
+//        .animation(.bouncy, value: dragAmount) // will animate the whole drag gesture
     }
 }
 
