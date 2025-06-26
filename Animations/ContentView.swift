@@ -8,35 +8,22 @@
 import SwiftUI
 
 struct ContentView: View {
-    let letters = Array("Hello swiftUI")
-    
-    @State private var enabled = false
-    @State private var dragAmount = CGSize.zero
-    
+    @State private var isShowingRed = false
     var body: some View {
-        HStack(spacing: 0) {
-            ForEach(0..<letters.count, id: \.self) { number in
-                Text(String(letters[number]))
-                    .padding(5)
-                    .font(.title)
-                    .background(enabled ? .blue : .red)
-                    .offset(dragAmount)
-                    .animation(
-                        .linear.delay(Double(number) / 20),
-                        value: dragAmount
-                    )
+        VStack(spacing: 0) {
+            Button("Tap me") {
+                withAnimation() {
+                    isShowingRed.toggle()
+                }
+            }
+            
+            if isShowingRed {
+                Rectangle()
+                    .fill(.red)
+                    .frame(width: 200, height: 200)
+                    .transition(.asymmetric(insertion: .scale, removal: .opacity))
             }
         }
-        .gesture(
-            DragGesture()
-                .onChanged { value in
-                    self.dragAmount = value.translation
-                }
-                .onEnded { value in
-                    self.dragAmount = .zero
-                    self.enabled.toggle()
-                }
-        )
     }
 }
 
